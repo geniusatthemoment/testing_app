@@ -1,0 +1,2040 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Книга рецептов</title>
+  <style>
+    :root {
+      --bg-top: #fff7e8;
+      --bg-bottom: #efe3d4;
+      --surface: #fffef8;
+      --surface-2: #fff7ee;
+      --ink: #2b241f;
+      --muted: #6d6258;
+      --line: #dacbb9;
+      --accent: #b64f2a;
+      --accent-2: #2d6d57;
+      --danger: #9b2f2f;
+      --shadow: 0 12px 28px rgba(47, 32, 18, 0.15);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+      background:
+        radial-gradient(1400px 720px at 12% -8%, #fff0bf 0%, transparent 52%),
+        radial-gradient(1200px 650px at 100% 0%, #ffd8ae 0%, transparent 45%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px 16px 42px;
+      animation: fade-in 400ms ease;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 2px);
+      padding: 20px 20px 18px;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 232, 0.9)),
+        repeating-linear-gradient(
+          45deg,
+          rgba(182, 79, 42, 0.04) 0,
+          rgba(182, 79, 42, 0.04) 10px,
+          rgba(45, 109, 87, 0.04) 10px,
+          rgba(45, 109, 87, 0.04) 20px
+        );
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4.8vw, 44px);
+      line-height: 1;
+      font-family: "Baskerville", "Palatino Linotype", serif;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 780px;
+    }
+
+    .app-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: minmax(320px, 390px) 1fr;
+      align-items: start;
+    }
+
+    .panel,
+    .workspace {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in oklab, var(--surface) 95%, #fff 5%);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      position: sticky;
+      top: 12px;
+      overflow: hidden;
+    }
+
+    .panel-top {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff8ec 0%, #fff 100%);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 10px 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      border-color: color-mix(in oklab, var(--accent) 58%, #fff 42%);
+      background: linear-gradient(180deg, #ffe7ce 0%, #fff6ea 100%);
+      box-shadow: inset 0 0 0 1px rgba(182, 79, 42, 0.2);
+    }
+
+    .form-wrap {
+      padding: 12px;
+      display: none;
+      max-height: calc(100vh - 156px);
+      overflow: auto;
+    }
+
+    .form-wrap.active {
+      display: block;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--muted);
+      letter-spacing: 0.25px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 9px 10px;
+      font-size: 14px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .row-2,
+    .row-3 {
+      display: grid;
+      gap: 8px;
+    }
+
+    .row-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .row-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .flags {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .filter-flags {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 0;
+    }
+
+    .flag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .flag input {
+      width: auto;
+      margin: 0;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 120ms ease, box-shadow 140ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 14px rgba(40, 30, 20, 0.14);
+    }
+
+    .primary {
+      background: linear-gradient(180deg, #d46f48 0%, var(--accent) 100%);
+      color: #fff;
+      border-color: color-mix(in oklab, var(--accent) 70%, #000 30%);
+    }
+
+    .secondary {
+      background: linear-gradient(180deg, #4d8f78 0%, var(--accent-2) 100%);
+      color: #fff;
+      border-color: color-mix(in oklab, var(--accent-2) 70%, #000 30%);
+    }
+
+    .danger {
+      background: linear-gradient(180deg, #be4d4d 0%, var(--danger) 100%);
+      color: #fff;
+      border-color: color-mix(in oklab, var(--danger) 70%, #000 30%);
+    }
+
+    .ghost {
+      background: #fff;
+    }
+
+    .form-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .workspace {
+      padding: 12px;
+    }
+
+    .workspace-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 12px;
+    }
+
+    .headline {
+      margin: 0;
+      font-family: "Baskerville", "Palatino Linotype", serif;
+      font-size: clamp(24px, 3.4vw, 32px);
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 2px;
+      font-size: 13px;
+    }
+
+    .ok {
+      color: #246f40;
+    }
+
+    .error {
+      color: #a42c2c;
+    }
+
+    .toolbar {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: linear-gradient(180deg, #fff 0%, #fff7ee 100%);
+      margin-bottom: 12px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+      animation: card-in 200ms ease;
+    }
+
+    @keyframes card-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .photo {
+      width: 100%;
+      height: 166px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #ffe2c0, #f6c58d);
+      border: none;
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .photo.empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7b6b5d;
+      font-size: 13px;
+      cursor: default;
+    }
+
+    .thumbs {
+      display: flex;
+      gap: 6px;
+      padding: 8px 8px 0;
+      overflow: auto;
+    }
+
+    .thumb {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      object-fit: cover;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    .name {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      background: #fff7ef;
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 3px 8px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .kbu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .kbu > div {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 6px 4px;
+      text-align: center;
+      background: #fffaf4;
+    }
+
+    .kbu b {
+      display: block;
+      font-size: 15px;
+    }
+
+    .kbu span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 4px 7px;
+      border: 1px solid var(--line);
+      background: #fdf5eb;
+      color: var(--muted);
+    }
+
+    .meta {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .actions button {
+      padding: 7px 6px;
+      font-size: 12px;
+    }
+
+    .empty-state {
+      border: 2px dashed var(--line);
+      border-radius: 14px;
+      padding: 22px 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      background: #fffbf6;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 15, 11, 0.55);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 120;
+      padding: 12px;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .dialog {
+      width: min(920px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 18px 42px rgba(30, 20, 12, 0.38);
+      padding: 14px;
+    }
+
+    .dialog-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .dialog-title {
+      margin: 0;
+      font-size: 24px;
+      font-family: "Baskerville", "Palatino Linotype", serif;
+    }
+
+    .x {
+      width: auto;
+      padding: 7px 11px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      cursor: zoom-in;
+    }
+
+    .photo-audit {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fffaf3;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .photo-audit h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .photo-audit-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .photo-audit-row {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .photo-audit-preview {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f3e7d8;
+      cursor: zoom-in;
+    }
+
+    .photo-audit-head {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .photo-audit-name {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .photo-audit-link {
+      display: inline-block;
+      max-width: 100%;
+      word-break: break-all;
+      font-size: 12px;
+      color: #5a3f2f;
+      text-decoration: underline;
+    }
+
+    .photo-status {
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      background: #fbf5eb;
+      color: var(--muted);
+    }
+
+    .photo-status.ok {
+      background: #eaf8ef;
+      color: #1c6d3b;
+      border-color: #b9e2c7;
+    }
+
+    .photo-status.error {
+      background: #fdecec;
+      color: #9d2b2b;
+      border-color: #efbcbc;
+    }
+
+    img.is-broken {
+      filter: grayscale(1);
+      opacity: 0.55;
+    }
+
+    .detail-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .detail {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px;
+      background: #fffaf3;
+      font-size: 14px;
+    }
+
+    .ingredients {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fffaf3;
+    }
+
+    .ingredients h4 {
+      margin: 0 0 8px;
+    }
+
+    .ingredients ul {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .lightbox {
+      width: min(1100px, 100%);
+      border-radius: 14px;
+      background: #13100d;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      padding: 10px;
+    }
+
+    .lightbox-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .lightbox img {
+      width: 100%;
+      height: min(74vh, 720px);
+      object-fit: contain;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    .lightbox-nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .lightbox-nav button {
+      width: auto;
+      min-width: 120px;
+      background: #23201c;
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    @media (max-width: 1060px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: static;
+      }
+
+      .form-wrap {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .row-2,
+      .row-3,
+      .btn-row,
+      .workspace-head {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <h1>Книга рецептов</h1>
+    </section>
+
+    <main class="app-grid">
+      <aside class="panel">
+        <div class="panel-top">
+          <div class="tabs">
+            <button class="tab-btn active" id="tab-product" type="button">Продукты</button>
+            <button class="tab-btn" id="tab-dish" type="button">Блюда</button>
+          </div>
+        </div>
+
+        <section class="form-wrap active" id="product-form-wrap">
+          <div class="field">
+            <label>ID (для обновления/удаления)</label>
+            <input id="p-id" type="number" min="1" placeholder="Выберите из карточки или введите" />
+          </div>
+
+          <div class="field">
+            <label>Название</label>
+            <input id="p-name" placeholder="Картофель" />
+          </div>
+
+          <div class="row-3">
+            <div class="field">
+              <label>Ккал / 100 г</label>
+              <input id="p-calories" type="number" step="0.01" min="0" />
+            </div>
+            <div class="field">
+              <label>Белки</label>
+              <input id="p-proteins" type="number" step="0.01" min="0" max="100" />
+            </div>
+            <div class="field">
+              <label>Жиры</label>
+              <input id="p-fats" type="number" step="0.01" min="0" max="100" />
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div class="field">
+              <label>Углеводы</label>
+              <input id="p-carbs" type="number" step="0.01" min="0" max="100" />
+            </div>
+            <div class="field">
+              <label>Категория</label>
+              <select id="p-category"></select>
+            </div>
+            <div class="field">
+              <label>Готовка</label>
+              <select id="p-cooking"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Состав (опционально)</label>
+            <textarea id="p-composition" placeholder="Текстовое описание состава"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Фото (по одной ссылке в строке, до 5)</label>
+            <textarea id="p-photos" placeholder="https://...\nhttps://..."></textarea>
+          </div>
+          <div class="field">
+            <label>Или загрузить фото файлами</label>
+            <input id="p-photo-files" type="file" accept="image/*" multiple />
+            <button class="ghost" id="p-upload-files" type="button" style="margin-top:8px;">Загрузить выбранные фото</button>
+          </div>
+
+          <div class="flags">
+            <label class="flag"><input id="p-vegan" type="checkbox" />Веган</label>
+            <label class="flag"><input id="p-gluten" type="checkbox" />Без глютена</label>
+            <label class="flag"><input id="p-sugar" type="checkbox" />Без сахара</label>
+          </div>
+
+          <div class="btn-row">
+            <button class="primary" id="p-create" type="button">Создать</button>
+            <button class="secondary" id="p-update" type="button">Обновить</button>
+            <button class="danger" id="p-delete" type="button">Удалить</button>
+          </div>
+          <button class="ghost" id="p-clear" type="button">Очистить форму</button>
+          <p class="form-note">Подсказка: нажмите «В форму» на карточке, чтобы быстро редактировать.</p>
+        </section>
+
+        <section class="form-wrap" id="dish-form-wrap">
+          <div class="field">
+            <label>ID (для обновления/удаления)</label>
+            <input id="d-id" type="number" min="1" placeholder="Выберите из карточки или введите" />
+          </div>
+
+          <div class="field">
+            <label>Название (можно с макросом: !суп, !десерт)</label>
+            <input id="d-name" placeholder="!суп Борщ" />
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label>Размер порции (г)</label>
+              <input id="d-portion" type="number" step="0.01" min="0" />
+            </div>
+            <div class="field">
+              <label>Категория (опционально)</label>
+              <select id="d-category"></select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div class="field">
+              <label>Ккал / порция</label>
+              <input id="d-calories" type="number" step="0.01" min="0" />
+            </div>
+            <div class="field">
+              <label>Белки / порция</label>
+              <input id="d-proteins" type="number" step="0.01" min="0" />
+            </div>
+            <div class="field">
+              <label>Жиры / порция</label>
+              <input id="d-fats" type="number" step="0.01" min="0" />
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label>Углеводы / порция</label>
+              <input id="d-carbs" type="number" step="0.01" min="0" />
+            </div>
+            <div class="field">
+              <label>Фото (по одной ссылке в строке, до 5)</label>
+              <textarea id="d-photos" placeholder="https://...\nhttps://..."></textarea>
+            </div>
+          </div>
+          <div class="field">
+            <label>Или загрузить фото файлами</label>
+            <input id="d-photo-files" type="file" accept="image/*" multiple />
+            <button class="ghost" id="d-upload-files" type="button" style="margin-top:8px;">Загрузить выбранные фото</button>
+          </div>
+
+          <div class="field">
+            <label>Состав (строка: product_id,граммы)</label>
+            <textarea id="d-ingredients" placeholder="1,150\n2,70\n3,250"></textarea>
+          </div>
+
+          <div class="flags">
+            <label class="flag"><input id="d-vegan" type="checkbox" />Веган</label>
+            <label class="flag"><input id="d-gluten" type="checkbox" />Без глютена</label>
+            <label class="flag"><input id="d-sugar" type="checkbox" />Без сахара</label>
+          </div>
+
+          <div class="btn-row">
+            <button class="primary" id="d-create" type="button">Создать</button>
+            <button class="secondary" id="d-update" type="button">Обновить</button>
+            <button class="danger" id="d-delete" type="button">Удалить</button>
+          </div>
+          <button class="ghost" id="d-clear" type="button">Очистить форму</button>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <div class="workspace-head">
+          <div>
+            <h2 class="headline" id="workspace-title">Каталог продуктов</h2>
+            <div class="status" id="workspace-status"></div>
+          </div>
+          <button class="ghost" id="refresh-btn" type="button">Обновить список</button>
+        </div>
+
+        <div class="toolbar" id="product-toolbar">
+          <div class="row-3">
+            <div class="field">
+              <label>Поиск</label>
+              <input id="p-q" placeholder="часть названия" />
+            </div>
+            <div class="field">
+              <label>Категория</label>
+              <select id="p-filter-category"></select>
+            </div>
+            <div class="field">
+              <label>Готовка</label>
+              <select id="p-filter-cooking"></select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div class="field">
+              <label>Сортировка</label>
+              <select id="p-sort">
+                <option value="name">Название (А-Я)</option>
+                <option value="calories">Калорийность</option>
+                <option value="proteins">Белки</option>
+                <option value="fats">Жиры</option>
+                <option value="carbs">Углеводы</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Порядок</label>
+              <select id="p-order">
+                <option value="asc">По возрастанию</option>
+                <option value="desc">По убыванию</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Доп. флаги</label>
+              <div class="flags filter-flags">
+                <label class="flag"><input id="p-filter-vegan" type="checkbox" />Веган</label>
+                <label class="flag"><input id="p-filter-gluten" type="checkbox" />Без глютена</label>
+                <label class="flag"><input id="p-filter-sugar" type="checkbox" />Без сахара</label>
+              </div>
+            </div>
+          </div>
+
+          <button class="secondary" id="p-apply" type="button">Применить фильтры</button>
+        </div>
+
+        <div class="toolbar" id="dish-toolbar" style="display:none;">
+          <div class="row-3">
+            <div class="field">
+              <label>Поиск</label>
+              <input id="d-q" placeholder="часть названия" />
+            </div>
+            <div class="field">
+              <label>Категория</label>
+              <select id="d-filter-category"></select>
+            </div>
+            <div class="field">
+              <label>Доп. флаги</label>
+              <div class="flags filter-flags">
+                <label class="flag"><input id="d-filter-vegan" type="checkbox" />Веган</label>
+                <label class="flag"><input id="d-filter-gluten" type="checkbox" />Без глютена</label>
+                <label class="flag"><input id="d-filter-sugar" type="checkbox" />Без сахара</label>
+              </div>
+            </div>
+          </div>
+
+          <button class="secondary" id="d-apply" type="button">Применить фильтры</button>
+        </div>
+
+        <div class="cards" id="cards"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay" id="details-overlay">
+    <div class="dialog">
+      <div class="dialog-top">
+        <h3 class="dialog-title" id="details-title"></h3>
+        <button class="ghost x" id="details-close" type="button">Закрыть</button>
+      </div>
+      <div class="gallery" id="details-gallery"></div>
+      <div class="photo-audit">
+        <h4>Фото: источник и проверка</h4>
+        <div class="photo-audit-list" id="details-photo-list"></div>
+      </div>
+      <div class="detail-list" id="details-meta"></div>
+      <div class="ingredients" id="details-ingredients" style="display:none;">
+        <h4>Состав</h4>
+        <ul id="details-ingredients-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="lightbox-overlay">
+    <div class="lightbox">
+      <div class="lightbox-top">
+        <div id="lightbox-counter">1 / 1</div>
+        <button class="x ghost" id="lightbox-close" type="button">Закрыть</button>
+      </div>
+      <img id="lightbox-image" alt="Фото" />
+      <div class="lightbox-nav">
+        <button id="lightbox-prev" type="button">← Назад</button>
+        <button id="lightbox-next" type="button">Вперед →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const state = {
+      mode: 'products',
+      meta: null,
+      products: [],
+      dishes: [],
+      productIndex: new Map(),
+      detailsPhotos: [],
+      productDirtyFields: new Set(),
+      suspendProductDirtyTracking: false,
+      lightbox: {
+        photos: [],
+        index: 0,
+      },
+    };
+
+    const FLAG_LABELS = {
+      vegan: 'Веган',
+      gluten_free: 'Без глютена',
+      sugar_free: 'Без сахара',
+    };
+
+    async function api(url, options = {}) {
+      const isFormData = options.body instanceof FormData;
+      const headers = { ...(options.headers || {}) };
+      if (!isFormData && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+      }
+
+      const resp = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      if (resp.status === 204) return null;
+      const data = await resp.json().catch(() => ({}));
+
+      if (!resp.ok) {
+        const text = data.error || data.message || JSON.stringify(data);
+        const err = new Error(text);
+        err.payload = data;
+        throw err;
+      }
+      return data;
+    }
+
+    function formatUiError(err) {
+      if (!err) return 'Неизвестная ошибка';
+      const payload = err.payload || {};
+      if (Array.isArray(payload.dishes) && payload.dishes.length) {
+        const dishesText = payload.dishes.map((d) => `#${d.id} ${d.name}`).join(', ');
+        const base = payload.message || err.message || 'Ошибка';
+        return `${base}. Используется в: ${dishesText}`;
+      }
+      return err.message || 'Ошибка';
+    }
+
+    function escapeHtml(text) {
+      return String(text ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+    }
+
+    function fmt(n) {
+      const num = Number(n);
+      if (!Number.isFinite(num)) return '0';
+      return num.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+    }
+
+    function parsePhotos(text) {
+      return String(text || '')
+        .split('\n')
+        .map((x) => x.trim())
+        .filter(Boolean)
+        .slice(0, 5);
+    }
+
+    function toAbsoluteUrl(url) {
+      return new URL(String(url || ''), window.location.origin).toString();
+    }
+
+    function isUploadedPhoto(url) {
+      try {
+        const parsed = new URL(String(url || ''), window.location.origin);
+        return parsed.pathname.startsWith('/uploads/');
+      } catch (_err) {
+        return false;
+      }
+    }
+
+    function photoSourceLabel(url) {
+      return isUploadedPhoto(url) ? 'Файл' : 'Ссылка';
+    }
+
+    function photoDisplayName(url) {
+      try {
+        const parsed = new URL(String(url || ''), window.location.origin);
+        if (parsed.pathname.startsWith('/uploads/')) {
+          const raw = parsed.pathname.split('/').pop() || '';
+          return decodeURIComponent(raw);
+        }
+      } catch (_err) {
+        return String(url || '');
+      }
+      return 'внешняя ссылка';
+    }
+
+    function applyImageFallbacks(scope = document) {
+      scope.querySelectorAll('img[data-photo]').forEach((img) => {
+        if (img.dataset.fallbackBound === '1') return;
+        img.dataset.fallbackBound = '1';
+        img.addEventListener('error', () => {
+          img.classList.add('is-broken');
+        });
+      });
+    }
+
+    function checkImageUrl(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        let done = false;
+        const finish = (ok) => {
+          if (done) return;
+          done = true;
+          resolve(ok);
+        };
+        const timer = setTimeout(() => finish(false), 7000);
+        img.onload = () => {
+          clearTimeout(timer);
+          finish(true);
+        };
+        img.onerror = () => {
+          clearTimeout(timer);
+          finish(false);
+        };
+        img.src = toAbsoluteUrl(url);
+      });
+    }
+
+    function renderDetailsPhotoAudit(photos) {
+      const container = $('details-photo-list');
+      if (!photos.length) {
+        container.innerHTML = '<div class=\"detail\">Фото не добавлены</div>';
+        return;
+      }
+
+      container.innerHTML = photos
+        .map((url, idx) => `
+          <div class=\"photo-audit-row\">
+            <img class=\"photo-audit-preview\" data-photo src=\"${escapeHtml(url)}\" alt=\"photo\" data-action=\"details-photo-audit\" data-index=\"${idx}\" />
+            <div>
+              <div class=\"photo-audit-head\">
+                <span class=\"chip\">${photoSourceLabel(url)}</span>
+                <span class=\"photo-status\" data-photo-status=\"${idx}\">Проверка...</span>
+              </div>
+              <div class=\"photo-audit-name\">${escapeHtml(photoDisplayName(url))}</div>
+              <a class=\"photo-audit-link\" href=\"${escapeHtml(url)}\" target=\"_blank\" rel=\"noopener noreferrer\">${escapeHtml(url)}</a>
+            </div>
+          </div>
+        `)
+        .join('');
+
+      applyImageFallbacks(container);
+
+      photos.forEach((url, idx) => {
+        const statusNode = container.querySelector(`[data-photo-status=\"${idx}\"]`);
+        if (!statusNode) return;
+        checkImageUrl(url).then((ok) => {
+          statusNode.textContent = ok ? 'ОК' : 'Ошибка';
+          statusNode.className = `photo-status ${ok ? 'ok' : 'error'}`;
+        });
+      });
+    }
+
+    function appendPhotoUrl(textareaId, url) {
+      const current = parsePhotos($(textareaId).value);
+      if (current.includes(url)) return current;
+      current.push(url);
+      $(textareaId).value = current.slice(0, 5).join('\n');
+      return current;
+    }
+
+    async function uploadFilesToPhotos(fileInputId, textareaId) {
+      const input = $(fileInputId);
+      const files = Array.from(input.files || []);
+      if (!files.length) throw new Error('Выберите хотя бы один файл');
+
+      let current = parsePhotos($(textareaId).value);
+      const availableSlots = 5 - current.length;
+      if (availableSlots <= 0) {
+        throw new Error('Достигнут лимит: максимум 5 фото');
+      }
+
+      const filesToUpload = files.slice(0, availableSlots);
+      for (const file of filesToUpload) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const uploaded = await api('/api/uploads', {
+          method: 'POST',
+          body: formData,
+        });
+        current = appendPhotoUrl(textareaId, uploaded.url);
+      }
+
+      input.value = '';
+      return {
+        uploaded: filesToUpload.length,
+        total: files.length,
+        skipped: files.length - filesToUpload.length,
+      };
+    }
+
+    function parseIngredients(text) {
+      const lines = String(text || '').split('\n').map((x) => x.trim()).filter(Boolean);
+      return lines.map((line) => {
+        const [productId, amount] = line.split(',').map((x) => x.trim());
+        if (!productId || !amount) throw new Error(`Неверная строка состава: ${line}`);
+        return {
+          product_id: Number(productId),
+          amount: Number(amount),
+        };
+      });
+    }
+
+    function getIngredientIdsFromDishForm() {
+      const raw = $('d-ingredients').value;
+      const trimmed = String(raw || '').trim();
+      if (!trimmed) return [];
+      try {
+        const ingredients = parseIngredients(trimmed);
+        return [...new Set(ingredients.map((item) => Number(item.product_id)))];
+      } catch (_err) {
+        return null;
+      }
+    }
+
+    function calculateAvailableDishFlags(ingredientIds) {
+      if (!ingredientIds || !ingredientIds.length) {
+        return { vegan: false, gluten_free: false, sugar_free: false };
+      }
+
+      const products = ingredientIds
+        .map((id) => state.productIndex.get(id))
+        .filter(Boolean);
+
+      if (products.length !== ingredientIds.length) {
+        return { vegan: false, gluten_free: false, sugar_free: false };
+      }
+
+      return {
+        vegan: products.every((p) => !!p.flags?.vegan),
+        gluten_free: products.every((p) => !!p.flags?.gluten_free),
+        sugar_free: products.every((p) => !!p.flags?.sugar_free),
+      };
+    }
+
+    function applyDishFlagAvailability() {
+      const ids = getIngredientIdsFromDishForm();
+      if (ids === null) return;
+
+      const available = calculateAvailableDishFlags(ids);
+      const controls = [
+        ['d-vegan', 'vegan'],
+        ['d-gluten', 'gluten_free'],
+        ['d-sugar', 'sugar_free'],
+      ];
+
+      controls.forEach(([id, key]) => {
+        const checkbox = $(id);
+        const canUse = !!available[key];
+        checkbox.disabled = !canUse;
+        if (!canUse) checkbox.checked = false;
+      });
+    }
+
+    function toNumOrUndefined(value) {
+      const clean = String(value ?? '').trim();
+      if (!clean) return undefined;
+      return Number(clean);
+    }
+
+    function markProductDirty(field) {
+      if (state.suspendProductDirtyTracking) return;
+      state.productDirtyFields.add(field);
+    }
+
+    function resetProductDirtyFields() {
+      state.productDirtyFields = new Set();
+    }
+
+    function bindProductDirtyTracking() {
+      const fieldMap = [
+        ['p-name', 'name'],
+        ['p-calories', 'calories'],
+        ['p-proteins', 'proteins'],
+        ['p-fats', 'fats'],
+        ['p-carbs', 'carbs'],
+        ['p-composition', 'composition'],
+        ['p-photos', 'photos'],
+      ];
+
+      fieldMap.forEach(([id, field]) => {
+        const node = $(id);
+        if (!node) return;
+        node.addEventListener('input', () => markProductDirty(field));
+        node.addEventListener('change', () => markProductDirty(field));
+      });
+
+      $('p-category').addEventListener('change', () => markProductDirty('category'));
+      $('p-cooking').addEventListener('change', () => markProductDirty('cooking_requirement'));
+      $('p-vegan').addEventListener('change', () => markProductDirty('flags.vegan'));
+      $('p-gluten').addEventListener('change', () => markProductDirty('flags.gluten_free'));
+      $('p-sugar').addEventListener('change', () => markProductDirty('flags.sugar_free'));
+    }
+
+    function readFlags(prefix) {
+      return {
+        vegan: $(`${prefix}-vegan`).checked,
+        gluten_free: $(`${prefix}-gluten`).checked,
+        sugar_free: $(`${prefix}-sugar`).checked,
+      };
+    }
+
+    function flagChips(flags) {
+      const enabled = Object.entries(flags || {}).filter(([, on]) => on).map(([k]) => FLAG_LABELS[k] || k);
+      if (!enabled.length) return '<span class="chip">Флагов нет</span>';
+      return enabled.map((name) => `<span class="chip">${escapeHtml(name)}</span>`).join('');
+    }
+
+    function setStatus(text, ok = true) {
+      const node = $('workspace-status');
+      node.textContent = text;
+      node.className = `status ${ok ? 'ok' : 'error'}`;
+    }
+
+    function clearStatus() {
+      $('workspace-status').textContent = '';
+      $('workspace-status').className = 'status';
+    }
+
+    function buildProductPayload() {
+      return {
+        name: $('p-name').value.trim(),
+        photos: parsePhotos($('p-photos').value),
+        calories: Number($('p-calories').value),
+        proteins: Number($('p-proteins').value),
+        fats: Number($('p-fats').value),
+        carbs: Number($('p-carbs').value),
+        composition: $('p-composition').value.trim() || null,
+        category: $('p-category').value,
+        cooking_requirement: $('p-cooking').value,
+        flags: readFlags('p'),
+      };
+    }
+
+    function readRequiredNumberForUpdate(inputId, title) {
+      const value = toNumOrUndefined($(inputId).value);
+      if (value === undefined) {
+        throw new Error(`Для поля "${title}" нужно указать число`);
+      }
+      return value;
+    }
+
+    function buildProductUpdatePayload() {
+      const payload = {};
+
+      if (state.productDirtyFields.has('name')) {
+        const name = $('p-name').value.trim();
+        if (!name) throw new Error('Название не может быть пустым');
+        payload.name = name;
+      }
+
+      if (state.productDirtyFields.has('photos')) {
+        payload.photos = parsePhotos($('p-photos').value);
+      }
+
+      if (state.productDirtyFields.has('calories')) {
+        payload.calories = readRequiredNumberForUpdate('p-calories', 'Ккал / 100 г');
+      }
+      if (state.productDirtyFields.has('proteins')) {
+        payload.proteins = readRequiredNumberForUpdate('p-proteins', 'Белки');
+      }
+      if (state.productDirtyFields.has('fats')) {
+        payload.fats = readRequiredNumberForUpdate('p-fats', 'Жиры');
+      }
+      if (state.productDirtyFields.has('carbs')) {
+        payload.carbs = readRequiredNumberForUpdate('p-carbs', 'Углеводы');
+      }
+
+      if (state.productDirtyFields.has('composition')) {
+        payload.composition = $('p-composition').value.trim() || null;
+      }
+      if (state.productDirtyFields.has('category')) {
+        payload.category = $('p-category').value;
+      }
+      if (state.productDirtyFields.has('cooking_requirement')) {
+        payload.cooking_requirement = $('p-cooking').value;
+      }
+
+      const flags = {};
+      if (state.productDirtyFields.has('flags.vegan')) {
+        flags.vegan = $('p-vegan').checked;
+      }
+      if (state.productDirtyFields.has('flags.gluten_free')) {
+        flags.gluten_free = $('p-gluten').checked;
+      }
+      if (state.productDirtyFields.has('flags.sugar_free')) {
+        flags.sugar_free = $('p-sugar').checked;
+      }
+      if (Object.keys(flags).length) {
+        payload.flags = flags;
+      }
+
+      if (!Object.keys(payload).length) {
+        throw new Error('Нет измененных полей для обновления');
+      }
+      return payload;
+    }
+
+    function buildDishPayload() {
+      const payload = {
+        name: $('d-name').value.trim(),
+        photos: parsePhotos($('d-photos').value),
+        portion_size: Number($('d-portion').value),
+        ingredients: parseIngredients($('d-ingredients').value),
+        flags: readFlags('d'),
+      };
+
+      const category = $('d-category').value;
+      if (category) payload.category = category;
+
+      const optional = {
+        calories: toNumOrUndefined($('d-calories').value),
+        proteins: toNumOrUndefined($('d-proteins').value),
+        fats: toNumOrUndefined($('d-fats').value),
+        carbs: toNumOrUndefined($('d-carbs').value),
+      };
+
+      for (const [key, val] of Object.entries(optional)) {
+        if (val !== undefined) payload[key] = val;
+      }
+
+      return payload;
+    }
+
+    function clearProductForm() {
+      state.suspendProductDirtyTracking = true;
+      $('p-id').value = '';
+      $('p-name').value = '';
+      $('p-calories').value = '';
+      $('p-proteins').value = '';
+      $('p-fats').value = '';
+      $('p-carbs').value = '';
+      $('p-composition').value = '';
+      $('p-photos').value = '';
+      $('p-photo-files').value = '';
+      $('p-vegan').checked = false;
+      $('p-gluten').checked = false;
+      $('p-sugar').checked = false;
+      state.suspendProductDirtyTracking = false;
+      resetProductDirtyFields();
+    }
+
+    function clearDishForm() {
+      $('d-id').value = '';
+      $('d-name').value = '';
+      $('d-portion').value = '';
+      $('d-category').value = '';
+      $('d-calories').value = '';
+      $('d-proteins').value = '';
+      $('d-fats').value = '';
+      $('d-carbs').value = '';
+      $('d-photos').value = '';
+      $('d-photo-files').value = '';
+      $('d-ingredients').value = '';
+      $('d-vegan').checked = false;
+      $('d-gluten').checked = false;
+      $('d-sugar').checked = false;
+      applyDishFlagAvailability();
+    }
+
+    function fillProductForm(product) {
+      state.suspendProductDirtyTracking = true;
+      $('p-id').value = product.id;
+      $('p-name').value = product.name || '';
+      $('p-calories').value = product.calories ?? '';
+      $('p-proteins').value = product.proteins ?? '';
+      $('p-fats').value = product.fats ?? '';
+      $('p-carbs').value = product.carbs ?? '';
+      $('p-composition').value = product.composition || '';
+      $('p-category').value = product.category || '';
+      $('p-cooking').value = product.cooking_requirement || '';
+      $('p-photos').value = (product.photos || []).join('\n');
+      $('p-vegan').checked = !!product.flags?.vegan;
+      $('p-gluten').checked = !!product.flags?.gluten_free;
+      $('p-sugar').checked = !!product.flags?.sugar_free;
+      state.suspendProductDirtyTracking = false;
+      resetProductDirtyFields();
+    }
+
+    function fillDishForm(dish) {
+      $('d-id').value = dish.id;
+      $('d-name').value = dish.name || '';
+      $('d-portion').value = dish.portion_size ?? '';
+      $('d-category').value = dish.category || '';
+      $('d-calories').value = dish.calories ?? '';
+      $('d-proteins').value = dish.proteins ?? '';
+      $('d-fats').value = dish.fats ?? '';
+      $('d-carbs').value = dish.carbs ?? '';
+      $('d-photos').value = (dish.photos || []).join('\n');
+      $('d-ingredients').value = (dish.ingredients || [])
+        .map((i) => `${i.product_id},${i.amount}`)
+        .join('\n');
+      $('d-vegan').checked = !!dish.flags?.vegan;
+      $('d-gluten').checked = !!dish.flags?.gluten_free;
+      $('d-sugar').checked = !!dish.flags?.sugar_free;
+      applyDishFlagAvailability();
+    }
+
+    function makePhotoBlock(item, type) {
+      const photos = item.photos || [];
+      if (!photos.length) {
+        return `<div class="photo empty">Без фото</div>`;
+      }
+      const lead = escapeHtml(photos[0]);
+      const thumbs = photos
+        .map((url, idx) => `<img class="thumb" data-photo src="${escapeHtml(url)}" alt="thumb" data-action="open-photo" data-type="${type}" data-id="${item.id}" data-index="${idx}" />`)
+        .join('');
+
+      return `<img class="photo" data-photo src="${lead}" alt="photo" data-action="open-photo" data-type="${type}" data-id="${item.id}" data-index="0" />
+        <div class="thumbs">${thumbs}</div>`;
+    }
+
+    function renderProducts() {
+      $('workspace-title').textContent = `Каталог продуктов (${state.products.length})`;
+      const container = $('cards');
+      if (!state.products.length) {
+        container.innerHTML = '<div class="empty-state">Ничего не найдено. Попробуйте изменить фильтры или добавьте продукт.</div>';
+        return;
+      }
+
+      container.innerHTML = state.products
+        .map((item) => {
+          return `
+            <article class="item">
+              ${makePhotoBlock(item, 'product')}
+              <div class="body">
+                <div class="name-row">
+                  <h3 class="name">${escapeHtml(item.name)}</h3>
+                  <span class="badge">#${item.id}</span>
+                </div>
+
+                <div class="kbu">
+                  <div><b>${fmt(item.calories)}</b><span>Ккал</span></div>
+                  <div><b>${fmt(item.proteins)}</b><span>Б</span></div>
+                  <div><b>${fmt(item.fats)}</b><span>Ж</span></div>
+                  <div><b>${fmt(item.carbs)}</b><span>У</span></div>
+                </div>
+
+                <div class="chips">${flagChips(item.flags)}</div>
+                <div class="meta">Категория: <b>${escapeHtml(item.category)}</b><br/>Готовка: <b>${escapeHtml(item.cooking_requirement)}</b></div>
+
+                <div class="actions">
+                  <button class="ghost" data-action="details" data-type="product" data-id="${item.id}">Карточка</button>
+                  <button class="secondary" data-action="edit" data-type="product" data-id="${item.id}">В форму</button>
+                  <button class="danger" data-action="delete" data-type="product" data-id="${item.id}">Удалить</button>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+      applyImageFallbacks(container);
+    }
+
+    function renderDishes() {
+      $('workspace-title').textContent = `Каталог блюд (${state.dishes.length})`;
+      const container = $('cards');
+      if (!state.dishes.length) {
+        container.innerHTML = '<div class="empty-state">Ничего не найдено. Попробуйте изменить фильтры или добавьте блюдо.</div>';
+        return;
+      }
+
+      container.innerHTML = state.dishes
+        .map((item) => {
+          const ingShort = (item.ingredients || [])
+            .slice(0, 3)
+            .map((i) => `<span class="chip">${escapeHtml(i.product_name)}: ${fmt(i.amount)} г</span>`)
+            .join('');
+          const ingRest = (item.ingredients || []).length > 3 ? `<span class="chip">+${(item.ingredients || []).length - 3}</span>` : '';
+
+          return `
+            <article class="item">
+              ${makePhotoBlock(item, 'dish')}
+              <div class="body">
+                <div class="name-row">
+                  <h3 class="name">${escapeHtml(item.name)}</h3>
+                  <span class="badge">#${item.id}</span>
+                </div>
+
+                <div class="kbu">
+                  <div><b>${fmt(item.calories)}</b><span>Ккал/порц</span></div>
+                  <div><b>${fmt(item.proteins)}</b><span>Б</span></div>
+                  <div><b>${fmt(item.fats)}</b><span>Ж</span></div>
+                  <div><b>${fmt(item.carbs)}</b><span>У</span></div>
+                </div>
+
+                <div class="chips">${flagChips(item.flags)}</div>
+                <div class="meta">Категория: <b>${escapeHtml(item.category)}</b><br/>Порция: <b>${fmt(item.portion_size)} г</b></div>
+                <div class="chips">${ingShort}${ingRest}</div>
+
+                <div class="actions">
+                  <button class="ghost" data-action="details" data-type="dish" data-id="${item.id}">Карточка</button>
+                  <button class="secondary" data-action="edit" data-type="dish" data-id="${item.id}">В форму</button>
+                  <button class="danger" data-action="delete" data-type="dish" data-id="${item.id}">Удалить</button>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+      applyImageFallbacks(container);
+    }
+
+    function showDetails(type, item) {
+      $('details-title').textContent = type === 'product' ? `${item.name} (#${item.id})` : `${item.name} (#${item.id})`;
+
+      const gallery = $('details-gallery');
+      const photos = item.photos || [];
+      state.detailsPhotos = photos.slice();
+      gallery.innerHTML = photos.length
+        ? photos.map((url, idx) => `<img data-photo src="${escapeHtml(url)}" alt="photo" data-action="details-photo" data-type="${type}" data-id="${item.id}" data-index="${idx}" />`).join('')
+        : '<div class="detail">Фото не добавлены</div>';
+      applyImageFallbacks(gallery);
+      renderDetailsPhotoAudit(photos);
+
+      const meta = [];
+      if (type === 'product') {
+        meta.push(
+          ['Название', item.name],
+          ['Категория', item.category],
+          ['Готовка', item.cooking_requirement],
+          ['Калорийность', `${fmt(item.calories)} ккал / 100 г`],
+          ['Белки', `${fmt(item.proteins)} г / 100 г`],
+          ['Жиры', `${fmt(item.fats)} г / 100 г`],
+          ['Углеводы', `${fmt(item.carbs)} г / 100 г`],
+          ['Флаги', Object.entries(item.flags || {}).filter(([, v]) => v).map(([k]) => FLAG_LABELS[k]).join(', ') || 'нет'],
+          ['Состав', item.composition || 'не указан'],
+          ['Дата создания', item.created_at || '—'],
+          ['Дата редактирования', item.updated_at || '—'],
+        );
+        $('details-ingredients').style.display = 'none';
+      } else {
+        meta.push(
+          ['Название', item.name],
+          ['Категория', item.category],
+          ['Порция', `${fmt(item.portion_size)} г`],
+          ['Калорийность', `${fmt(item.calories)} ккал / порция`],
+          ['Белки', `${fmt(item.proteins)} г / порция`],
+          ['Жиры', `${fmt(item.fats)} г / порция`],
+          ['Углеводы', `${fmt(item.carbs)} г / порция`],
+          ['Флаги', Object.entries(item.flags || {}).filter(([, v]) => v).map(([k]) => FLAG_LABELS[k]).join(', ') || 'нет'],
+          ['Дата создания', item.created_at || '—'],
+          ['Дата редактирования', item.updated_at || '—'],
+        );
+
+        const ingNode = $('details-ingredients-list');
+        ingNode.innerHTML = (item.ingredients || []).map((ing) => `<li>${escapeHtml(ing.product_name)}: <b>${fmt(ing.amount)} г</b></li>`).join('');
+        $('details-ingredients').style.display = item.ingredients?.length ? 'block' : 'none';
+      }
+
+      $('details-meta').innerHTML = meta.map(([k, v]) => `<div class="detail"><b>${escapeHtml(k)}:</b><br/>${escapeHtml(v)}</div>`).join('');
+      $('details-overlay').classList.add('active');
+    }
+
+    function closeDetails() {
+      $('details-overlay').classList.remove('active');
+      state.detailsPhotos = [];
+    }
+
+    function openLightbox(photos, index = 0) {
+      if (!photos?.length) return;
+      state.lightbox.photos = photos;
+      state.lightbox.index = index;
+      renderLightbox();
+      $('lightbox-overlay').classList.add('active');
+    }
+
+    function closeLightbox() {
+      $('lightbox-overlay').classList.remove('active');
+    }
+
+    function renderLightbox() {
+      const photos = state.lightbox.photos;
+      const idx = state.lightbox.index;
+      $('lightbox-image').src = photos[idx] || '';
+      $('lightbox-counter').textContent = `${idx + 1} / ${photos.length}`;
+    }
+
+    function stepLightbox(delta) {
+      const len = state.lightbox.photos.length;
+      if (!len) return;
+      state.lightbox.index = (state.lightbox.index + delta + len) % len;
+      renderLightbox();
+    }
+
+    function readFlagFilter(prefix) {
+      return {
+        vegan: $(`${prefix}-vegan`).checked,
+        gluten_free: $(`${prefix}-gluten`).checked,
+        sugar_free: $(`${prefix}-sugar`).checked,
+      };
+    }
+
+    async function loadMeta() {
+      const meta = await api('/api/meta');
+      state.meta = meta;
+
+      $('p-category').innerHTML = meta.product_categories.map((x) => `<option>${escapeHtml(x)}</option>`).join('');
+      $('p-cooking').innerHTML = meta.cooking_requirements.map((x) => `<option>${escapeHtml(x)}</option>`).join('');
+      $('d-category').innerHTML = `<option value="">(из макроса/без выбора)</option>${meta.dish_categories.map((x) => `<option>${escapeHtml(x)}</option>`).join('')}`;
+
+      $('p-filter-category').innerHTML = `<option value="">(любая)</option>${meta.product_categories.map((x) => `<option>${escapeHtml(x)}</option>`).join('')}`;
+      $('p-filter-cooking').innerHTML = `<option value="">(любая)</option>${meta.cooking_requirements.map((x) => `<option>${escapeHtml(x)}</option>`).join('')}`;
+      $('d-filter-category').innerHTML = `<option value="">(любая)</option>${meta.dish_categories.map((x) => `<option>${escapeHtml(x)}</option>`).join('')}`;
+    }
+
+    async function loadAllProductsIndex() {
+      const allProducts = await api('/api/products?sort_by=name&order=asc');
+      state.productIndex = new Map(allProducts.map((p) => [Number(p.id), p]));
+      applyDishFlagAvailability();
+    }
+
+    async function loadProducts() {
+      const query = new URLSearchParams();
+      const q = $('p-q').value.trim();
+      if (q) query.set('q', q);
+
+      const category = $('p-filter-category').value;
+      if (category) query.set('category', category);
+
+      const cooking = $('p-filter-cooking').value;
+      if (cooking) query.set('cooking_requirement', cooking);
+
+      const flags = readFlagFilter('p-filter');
+      Object.entries(flags).forEach(([k, v]) => {
+        if (v) query.set(k, 'true');
+      });
+
+      query.set('sort_by', $('p-sort').value);
+      query.set('order', $('p-order').value);
+
+      state.products = await api(`/api/products?${query.toString()}`);
+      if (state.mode === 'products') renderProducts();
+      setStatus(`Продуктов: ${state.products.length}`, true);
+    }
+
+    async function loadDishes() {
+      const query = new URLSearchParams();
+      const q = $('d-q').value.trim();
+      if (q) query.set('q', q);
+
+      const category = $('d-filter-category').value;
+      if (category) query.set('category', category);
+
+      const flags = readFlagFilter('d-filter');
+      Object.entries(flags).forEach(([k, v]) => {
+        if (v) query.set(k, 'true');
+      });
+
+      state.dishes = await api(`/api/dishes?${query.toString()}`);
+      if (state.mode === 'dishes') renderDishes();
+      setStatus(`Блюд: ${state.dishes.length}`, true);
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      const isProducts = mode === 'products';
+
+      $('tab-product').classList.toggle('active', isProducts);
+      $('tab-dish').classList.toggle('active', !isProducts);
+      $('product-form-wrap').classList.toggle('active', isProducts);
+      $('dish-form-wrap').classList.toggle('active', !isProducts);
+      $('product-toolbar').style.display = isProducts ? 'block' : 'none';
+      $('dish-toolbar').style.display = isProducts ? 'none' : 'block';
+
+      if (isProducts) {
+        renderProducts();
+      } else {
+        renderDishes();
+      }
+      clearStatus();
+    }
+
+    async function createProduct() {
+      const payload = buildProductPayload();
+      const created = await api('/api/products', { method: 'POST', body: JSON.stringify(payload) });
+      setStatus(`Продукт создан: #${created.id}`, true);
+      await Promise.all([loadProducts(), loadAllProductsIndex()]);
+      fillProductForm(created);
+    }
+
+    async function updateProduct() {
+      const id = Number($('p-id').value);
+      if (!id) throw new Error('Укажите ID продукта');
+      const payload = buildProductUpdatePayload();
+      const updated = await api(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+      await Promise.all([loadProducts(), loadDishes(), loadAllProductsIndex()]);
+      fillProductForm(updated);
+      setStatus(`Продукт обновлен: #${updated.id}`, true);
+    }
+
+    async function deleteProduct(id = null) {
+      const targetId = id ?? Number($('p-id').value);
+      if (!targetId) throw new Error('Укажите ID продукта');
+      await api(`/api/products/${targetId}`, { method: 'DELETE' });
+      setStatus(`Продукт удален: #${targetId}`, true);
+      await Promise.all([loadProducts(), loadDishes(), loadAllProductsIndex()]);
+      if (Number($('p-id').value) === targetId) clearProductForm();
+    }
+
+    async function createDish() {
+      const payload = buildDishPayload();
+      const created = await api('/api/dishes', { method: 'POST', body: JSON.stringify(payload) });
+      setStatus(`Блюдо создано: #${created.id}`, true);
+      await loadDishes();
+      fillDishForm(created);
+    }
+
+    async function updateDish() {
+      const id = Number($('d-id').value);
+      if (!id) throw new Error('Укажите ID блюда');
+      const payload = buildDishPayload();
+      const updated = await api(`/api/dishes/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+      setStatus(`Блюдо обновлено: #${updated.id}`, true);
+      await loadDishes();
+      fillDishForm(updated);
+    }
+
+    async function deleteDish(id = null) {
+      const targetId = id ?? Number($('d-id').value);
+      if (!targetId) throw new Error('Укажите ID блюда');
+      await api(`/api/dishes/${targetId}`, { method: 'DELETE' });
+      setStatus(`Блюдо удалено: #${targetId}`, true);
+      await loadDishes();
+      if (Number($('d-id').value) === targetId) clearDishForm();
+    }
+
+    function byTypeAndId(type, id) {
+      if (type === 'product') return state.products.find((x) => x.id === id);
+      return state.dishes.find((x) => x.id === id);
+    }
+
+    async function safeAction(action) {
+      try {
+        await action();
+      } catch (err) {
+        setStatus(formatUiError(err), false);
+      }
+    }
+
+    function debounce(fn, delayMs = 250) {
+      let timer = null;
+      return (...args) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delayMs);
+      };
+    }
+
+    function handleCardsClick(event) {
+      const target = event.target.closest('[data-action]');
+      if (!target) return;
+
+      const action = target.dataset.action;
+      const type = target.dataset.type;
+      const id = Number(target.dataset.id);
+      const index = Number(target.dataset.index || '0');
+
+      const item = byTypeAndId(type, id);
+      if (!item) return;
+
+      if (action === 'open-photo') {
+        openLightbox(item.photos || [], index);
+        return;
+      }
+
+      if (action === 'details') {
+        showDetails(type, item);
+        return;
+      }
+
+      if (action === 'edit') {
+        if (type === 'product') {
+          setMode('products');
+          fillProductForm(item);
+        } else {
+          setMode('dishes');
+          fillDishForm(item);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (action === 'delete') {
+        if (type === 'product') {
+          safeAction(async () => {
+            if (!confirm(`Удалить продукт #${id}?`)) return;
+            await deleteProduct(id);
+          });
+        } else {
+          safeAction(async () => {
+            if (!confirm(`Удалить блюдо #${id}?`)) return;
+            await deleteDish(id);
+          });
+        }
+      }
+    }
+
+    function bindEvents() {
+      const autoApplyProducts = debounce(() => safeAction(loadProducts), 220);
+      const autoApplyDishes = debounce(() => safeAction(loadDishes), 220);
+
+      $('tab-product').addEventListener('click', () => setMode('products'));
+      $('tab-dish').addEventListener('click', () => setMode('dishes'));
+
+      $('refresh-btn').addEventListener('click', () => {
+        safeAction(async () => {
+          if (state.mode === 'products') {
+            await loadProducts();
+          } else {
+            await loadDishes();
+          }
+        });
+      });
+
+      $('p-apply').addEventListener('click', () => safeAction(loadProducts));
+      $('d-apply').addEventListener('click', () => safeAction(loadDishes));
+      $('d-ingredients').addEventListener('input', applyDishFlagAvailability);
+      $('d-ingredients').addEventListener('change', applyDishFlagAvailability);
+
+      $('p-q').addEventListener('input', autoApplyProducts);
+      ['p-filter-category', 'p-filter-cooking', 'p-sort', 'p-order', 'p-filter-vegan', 'p-filter-gluten', 'p-filter-sugar']
+        .forEach((id) => $(id).addEventListener('change', () => safeAction(loadProducts)));
+
+      $('d-q').addEventListener('input', autoApplyDishes);
+      ['d-filter-category', 'd-filter-vegan', 'd-filter-gluten', 'd-filter-sugar']
+        .forEach((id) => $(id).addEventListener('change', () => safeAction(loadDishes)));
+
+      $('p-create').addEventListener('click', () => safeAction(createProduct));
+      $('p-update').addEventListener('click', () => safeAction(updateProduct));
+      $('p-delete').addEventListener('click', () => safeAction(async () => {
+        if (!confirm('Удалить продукт из формы?')) return;
+        await deleteProduct();
+      }));
+      $('p-upload-files').addEventListener('click', () => safeAction(async () => {
+        const result = await uploadFilesToPhotos('p-photo-files', 'p-photos');
+        markProductDirty('photos');
+        const suffix = result.skipped ? ` (пропущено: ${result.skipped}, лимит 5)` : '';
+        setStatus(`Загружено фото для продукта: ${result.uploaded} из ${result.total}${suffix}. Теперь нажмите "Создать" или "Обновить".`, true);
+      }));
+      $('p-clear').addEventListener('click', clearProductForm);
+
+      $('d-create').addEventListener('click', () => safeAction(createDish));
+      $('d-update').addEventListener('click', () => safeAction(updateDish));
+      $('d-delete').addEventListener('click', () => safeAction(async () => {
+        if (!confirm('Удалить блюдо из формы?')) return;
+        await deleteDish();
+      }));
+      $('d-upload-files').addEventListener('click', () => safeAction(async () => {
+        const result = await uploadFilesToPhotos('d-photo-files', 'd-photos');
+        const suffix = result.skipped ? ` (пропущено: ${result.skipped}, лимит 5)` : '';
+        setStatus(`Загружено фото для блюда: ${result.uploaded} из ${result.total}${suffix}. Теперь нажмите "Создать" или "Обновить".`, true);
+      }));
+      $('d-clear').addEventListener('click', clearDishForm);
+
+      $('cards').addEventListener('click', handleCardsClick);
+
+      $('details-close').addEventListener('click', closeDetails);
+      $('details-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'details-overlay') closeDetails();
+      });
+
+      $('details-gallery').addEventListener('click', (e) => {
+        const el = e.target.closest('[data-action="details-photo"]');
+        if (!el) return;
+        const type = el.dataset.type;
+        const id = Number(el.dataset.id);
+        const index = Number(el.dataset.index || '0');
+        const item = byTypeAndId(type, id);
+        if (!item) return;
+        openLightbox(item.photos || [], index);
+      });
+
+      $('details-photo-list').addEventListener('click', (e) => {
+        const el = e.target.closest('[data-action="details-photo-audit"]');
+        if (!el) return;
+        const index = Number(el.dataset.index || '0');
+        if (!state.detailsPhotos.length) return;
+        openLightbox(state.detailsPhotos, index);
+      });
+
+      $('lightbox-close').addEventListener('click', closeLightbox);
+      $('lightbox-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'lightbox-overlay') closeLightbox();
+      });
+      $('lightbox-prev').addEventListener('click', () => stepLightbox(-1));
+      $('lightbox-next').addEventListener('click', () => stepLightbox(1));
+
+      document.addEventListener('keydown', (e) => {
+        if ($('lightbox-overlay').classList.contains('active')) {
+          if (e.key === 'ArrowLeft') stepLightbox(-1);
+          if (e.key === 'ArrowRight') stepLightbox(1);
+          if (e.key === 'Escape') closeLightbox();
+        }
+        if ($('details-overlay').classList.contains('active') && e.key === 'Escape') {
+          closeDetails();
+        }
+      });
+    }
+
+    async function boot() {
+      bindEvents();
+      bindProductDirtyTracking();
+      try {
+        await loadMeta();
+        await Promise.all([loadProducts(), loadDishes(), loadAllProductsIndex()]);
+        setMode('products');
+      } catch (err) {
+        setStatus(err.message, false);
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>
